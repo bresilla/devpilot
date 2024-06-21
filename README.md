@@ -3,7 +3,8 @@
 devpilot
 ===
 
-Welcome to DevPilot! DevPilot is your ultimate tool for managing development workflows and projects with ease. Whether you're a solo developer or part of a larger team, DevPilot simplifies project management, task tracking, and workflow automation.
+devpilot is your ultimate tool for managing development workflows and projects with ease. devpilot simplifies project management, task tracking, and workflow automation. It is designed to help manage workflows locally and remotely, with seamless integration with development tools.
+
 
 ## Features
 
