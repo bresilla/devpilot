@@ -1,0 +1,248 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "cargo@latest": {
+      "last_modified": "2024-05-22T06:18:38Z",
+      "resolved": "github:NixOS/nixpkgs/3f316d2a50699a78afe5e77ca486ad553169061e#cargo",
+      "source": "devbox-search",
+      "version": "1.77.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6dysg86604nl3cqw6wxsdawwf80cwz84-cargo-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6dysg86604nl3cqw6wxsdawwf80cwz84-cargo-1.77.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/y7g0y71k01w8q91667gw7jnhkgx3zcjq-cargo-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/y7g0y71k01w8q91667gw7jnhkgx3zcjq-cargo-1.77.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hs62jqnwlpnip1n3wv4xy7yy0xgbpv0w-cargo-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hs62jqnwlpnip1n3wv4xy7yy0xgbpv0w-cargo-1.77.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/z8dx4c6z528qi2w1p38yzg17g8q5jnln-cargo-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/z8dx4c6z528qi2w1p38yzg17g8q5jnln-cargo-1.77.2"
+        }
+      }
+    },
+    "clippy@latest": {
+      "last_modified": "2024-05-22T06:18:38Z",
+      "resolved": "github:NixOS/nixpkgs/3f316d2a50699a78afe5e77ca486ad553169061e#clippy",
+      "source": "devbox-search",
+      "version": "1.77.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fyjfaa83p7v6dqdshvzqx8rcqrdy7pg2-clippy-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fyjfaa83p7v6dqdshvzqx8rcqrdy7pg2-clippy-1.77.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xnfg0zfzl21phsjb9222rkj8j8q0k5sk-clippy-1.77.2",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/rjakvxq2p1jk51033dzyvxfbsr2i2yxj-clippy-1.77.2-debug"
+            }
+          ],
+          "store_path": "/nix/store/xnfg0zfzl21phsjb9222rkj8j8q0k5sk-clippy-1.77.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/n6vaq6a2pb8ssm90x0hyfl01dsh0j91s-clippy-1.77.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/n6vaq6a2pb8ssm90x0hyfl01dsh0j91s-clippy-1.77.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/52jh0wm8ygxbxqd0vnqsnsr3iz30cif8-clippy-1.77.2",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/93p43476pnig9jr4jml9zgvn4vcb4h6d-clippy-1.77.2-debug"
+            }
+          ],
+          "store_path": "/nix/store/52jh0wm8ygxbxqd0vnqsnsr3iz30cif8-clippy-1.77.2"
+        }
+      }
+    },
+    "rust-analyzer@latest": {
+      "last_modified": "2024-05-22T06:18:38Z",
+      "resolved": "github:NixOS/nixpkgs/3f316d2a50699a78afe5e77ca486ad553169061e#rust-analyzer",
+      "source": "devbox-search",
+      "version": "2024-04-29",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/k7ghh922ryw591cyswy75adfgjwxvgd4-rust-analyzer-2024-04-29",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/k7ghh922ryw591cyswy75adfgjwxvgd4-rust-analyzer-2024-04-29"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nj8sxv5nlhb0pr94yifkqa2ksmd8zvwl-rust-analyzer-2024-04-29",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/nj8sxv5nlhb0pr94yifkqa2ksmd8zvwl-rust-analyzer-2024-04-29"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j8zfrlqsj7rvasg0ap68cbsrb8gv17g3-rust-analyzer-2024-04-29",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j8zfrlqsj7rvasg0ap68cbsrb8gv17g3-rust-analyzer-2024-04-29"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cqwfx5lw6xq4rmam8fc49fn5vcnfxrzy-rust-analyzer-2024-04-29",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cqwfx5lw6xq4rmam8fc49fn5vcnfxrzy-rust-analyzer-2024-04-29"
+        }
+      }
+    },
+    "rustc@latest": {
+      "last_modified": "2024-05-22T06:18:38Z",
+      "plugin_version": "0.0.1",
+      "resolved": "github:NixOS/nixpkgs/3f316d2a50699a78afe5e77ca486ad553169061e#rustc",
+      "source": "devbox-search",
+      "version": "1.77.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vz0f0ydykljjji91a94sq8jskh3lpl4h-rustc-wrapper-1.77.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/0r6hm57fmlzhngn76v7vh7vzfp7qrsq8-rustc-wrapper-1.77.2-man",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/27mzrpxnjkxxrcgs421m47digv5izwj9-rustc-wrapper-1.77.2-doc"
+            }
+          ],
+          "store_path": "/nix/store/vz0f0ydykljjji91a94sq8jskh3lpl4h-rustc-wrapper-1.77.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/k39d1qjy8bz9l3q9jggwwppj090zs502-rustc-wrapper-1.77.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/81z8isp5ycxfnw605hyjimyr1z6y4frs-rustc-wrapper-1.77.2-man",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/ffllkq9ghxj8jb5vrrgq812kg1rv0p7r-rustc-wrapper-1.77.2-doc"
+            }
+          ],
+          "store_path": "/nix/store/k39d1qjy8bz9l3q9jggwwppj090zs502-rustc-wrapper-1.77.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/44m5mf334ids5kx3ky29s32hmbk9bddp-rustc-wrapper-1.77.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/wpb35n9fbi4fb7z2klz6b975a1870vw1-rustc-wrapper-1.77.2-man",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/h40ph4ylmv4xbkp05ibgjfiq4vxxx8kp-rustc-wrapper-1.77.2-doc"
+            }
+          ],
+          "store_path": "/nix/store/44m5mf334ids5kx3ky29s32hmbk9bddp-rustc-wrapper-1.77.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j2zdy07sb5nbiskhp5g79c93rj9076n0-rustc-wrapper-1.77.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/hwnpy2pmiq5m3xvckcwxvparxgwal323-rustc-wrapper-1.77.2-man",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/xdqq9v95ydwp4cc44qrdfvfsk1ll15mx-rustc-wrapper-1.77.2-doc"
+            }
+          ],
+          "store_path": "/nix/store/j2zdy07sb5nbiskhp5g79c93rj9076n0-rustc-wrapper-1.77.2"
+        }
+      }
+    },
+    "vscode-extensions.llvm-org.lldb-vscode@latest": {
+      "last_modified": "2023-02-24T09:01:09Z",
+      "resolved": "github:NixOS/nixpkgs/7d0ed7f2e5aea07ab22ccb338d27fbe347ed2f11#vscode-extensions.llvm-org.lldb-vscode",
+      "source": "devbox-search",
+      "version": "8.0.1"
+    }
+  }
+}

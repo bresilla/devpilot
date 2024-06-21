@@ -1,0 +1,9 @@
+[package]
+name = "devpilot"
+authors = ["Trim Bresilla <trim.bresilla@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4.3.23", features = ["derive"] }
