@@ -20,44 +20,24 @@ pub fn descriptin_str(word: &str) -> String {
 const ABOUT_STR: &str = "ultimate tool for managing development workflows";
 
 pub fn cli(logo: bool) -> Command {
-    // let _logo_1: String ="
-    //     ▄▄▄   ".bright_blue().to_string().to_owned()+"     ▄▄▄   ".bright_blue().to_string().as_str() + "     ▄▄▄     ".bright_green().to_string().as_str() + " 
-    //   ▟█████▙ ".bright_blue().to_string().as_str() + "   ▟█████▙ ".bright_blue().to_string().as_str() + "   ▟█████▙   ".bright_green().to_string().as_str() + "   
-    //   ▜█████▛ ".bright_blue().to_string().as_str() + "   ▜█████▛ ".bright_blue().to_string().as_str() + "   ▜█████▛   ".bright_green().to_string().as_str() + "   
-    //     ▀▀▀   ".bright_blue().to_string().as_str() + "     ▀▀▀   ".bright_blue().to_string().as_str() + "     ▀▀▀     ".bright_green().to_string().as_str() + "   
-    //     ▄▄▄   ".bright_blue().to_string().as_str() + "     ▄▄▄   ".bright_green().to_string().as_str() + "     ▄▄▄     ".bright_blue().to_string().as_str() + "   
-    //   ▟█████▙ ".bright_blue().to_string().as_str() + "   ▟█████▙ ".bright_green().to_string().as_str() + "   ▟█████▙   ".bright_blue().to_string().as_str() + "   
-    //   ▜█████▛ ".bright_blue().to_string().as_str() + "   ▜█████▛ ".bright_green().to_string().as_str() + "   ▜█████▛   ".bright_blue().to_string().as_str() + "   
-    //     ▀▀▀   ".bright_blue().to_string().as_str() + "     ▀▀▀   ".bright_green().to_string().as_str() + "     ▀▀▀     ".bright_blue().to_string().as_str() + "   
-    //     ▄▄▄   ".bright_blue().to_string().as_str() + "     ▄▄▄   ".bright_blue().to_string().as_str() + "     ▄▄▄     ".bright_green().to_string().as_str() + "   
-    //   ▟█████▙ ".bright_blue().to_string().as_str() + "   ▟█████▙ ".bright_blue().to_string().as_str() + "   ▟█████▙   ".bright_green().to_string().as_str() + "   
-    //   ▜█████▛ ".bright_blue().to_string().as_str() + "   ▜█████▛ ".bright_blue().to_string().as_str() + "   ▜█████▛   ".bright_green().to_string().as_str() + "   
-    //     ▀▀▀   ".bright_blue().to_string().as_str() + "     ▀▀▀   ".bright_blue().to_string().as_str() + "     ▀▀▀     ".bright_green().to_string().as_str() + "\n";
-
-      let _logo_1: String ="
-             ██      ".bright_blue().to_string().to_owned()+"
-             ██       ".bright_blue().to_string().as_str()+"
-         ██████ ██████   ".bright_blue().to_string().as_str()+"
-        ██   ██ ██   ██ ".bright_blue().to_string().as_str()+"
-         ██████ ██████  ".bright_blue().to_string().as_str()+"
-                ██      ".bright_blue().to_string().as_str()+"
-                ██      ".bright_blue().to_string().as_str()+ "\n";
-
-
+    let _logo_1: String ="
+       ██         ".bright_blue().to_string().to_owned()+"
+       ██         ".bright_blue().to_string().as_str()+"
+   ██████ ██████  ".bright_blue().to_string().as_str()+"
+  ██   ██ ██   ██ ".bright_blue().to_string().as_str()+"
+   ██████ ██████  ".bright_blue().to_string().as_str()+"
+          ██      ".bright_blue().to_string().as_str()+"
+          ██      ".bright_blue().to_string().as_str()+ "\n";
     let logo_str: String = if logo {_logo_1 } else { String::new() };
-
     let help_str: String = " ".to_string().to_owned()+"
 Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <COMMAND>".green().to_string().as_str()+"
       ".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <C>".green().to_string().as_str()+"
 
-Utilities Commands:".bright_blue().bold().to_string().as_str()+"
-  "+ &command_str("cd") + "       "+&letter_str("c")+ &descriptin_str("Go to project") + "
-  "+ &command_str("ls") + "       "+&letter_str("l")+ &descriptin_str("List all projects") + "
-  "+ &command_str("ed") + "       "+&letter_str("e")+ &descriptin_str("Open code editor") + "
-  
-Management Commands:".bright_blue().bold().to_string().as_str()+ "
-  "+ &command_str("space") + "    "+&letter_str("s")+ &descriptin_str("Workspace management") + "
-  "+ &command_str("host") + "     "+&letter_str("h")+ &descriptin_str("Hostname management") + "
+Commands:".bright_blue().bold().to_string().as_str()+"
+  "+ &command_str("workspace") + "   "+&letter_str("w")+ &descriptin_str("Workspace related commands") + "
+  "+ &command_str("project") + "     "+&letter_str("p")+ &descriptin_str("Project and code creation") + "
+  "+ &command_str("hostname") + "    "+&letter_str("h")+ &descriptin_str("Add or edit hostnames and ssh") + "
+  "+ &command_str("template") + "    "+&letter_str("t")+ &descriptin_str("Project template management") + "
   ";
 
     let styles = styling::Styles::styled()
