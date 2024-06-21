@@ -6,8 +6,6 @@ devpilot
 devpilot is your ultimate tool for managing development workflows and projects with ease. devpilot simplifies project management, task tracking, and workflow automation, allowing you to focus on what you do best. It is designed to help you manage workflows locally and remotely, with seamless integration with popular development tools and platforms.
 
 
-[![License](https://img.shields.io/github/license/bresilla/devpilot)](
-
 ## Features
 
 - **Management**: Create, manage, and organize your projects effortlessly.
