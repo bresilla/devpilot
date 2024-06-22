@@ -1,5 +1,11 @@
-use clap::{Command, builder::styling, arg};
+use clap::{Command, builder::styling, arg, Arg};
 use colored::Colorize;
+
+mod workspace;
+mod project;
+mod machine;
+mod template;
+
 
 pub fn letter_str(letter: &str) -> String {
     let mut wrapped = "[".bright_green().to_string();
@@ -30,15 +36,18 @@ pub fn cli(logo: bool) -> Command {
           ██      ".bright_blue().to_string().as_str()+ "\n";
     let logo_str: String = if logo {_logo_1 } else { String::new() };
     let help_str: String = " ".to_string().to_owned()+"
-Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <COMMAND>".green().to_string().as_str()+"
-      ".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <C>".green().to_string().as_str()+"
+Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <COMMAND> ".green().to_string().as_str()+"
+      ".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" [C] ".green().to_string().as_str()+"
 
 Commands:".bright_blue().bold().to_string().as_str()+"
   "+ &command_str("workspace") + "   "+&letter_str("w")+ &descriptin_str("Workspace related commands") + "
   "+ &command_str("project") + "     "+&letter_str("p")+ &descriptin_str("Project and code creation") + "
-  "+ &command_str("hostname") + "    "+&letter_str("h")+ &descriptin_str("Add or edit hostnames and ssh") + "
+  "+ &command_str("machine") + "     "+&letter_str("m")+ &descriptin_str("Add or edit hostnames and ssh") + "
   "+ &command_str("template") + "    "+&letter_str("t")+ &descriptin_str("Project template management") + "
-  ";
+
+Options:".bright_blue().bold().to_string().as_str()+"
+    "+ &command_str("-n, --namespace <NAMESPACE>") + "  "+&descriptin_str("Namespace to use [default: default]") + "
+    ";
 
     let styles = styling::Styles::styled()
         .header(styling::AnsiColor::Blue.on_default() | styling::Effects::BOLD)
@@ -55,21 +64,20 @@ Commands:".bright_blue().bold().to_string().as_str()+"
         .long_about(ABOUT_STR)
         .subcommand_required(true)
         .arg_required_else_help(true)
-        .allow_external_subcommands(false)
         .disable_help_subcommand(true)
+        .allow_external_subcommands(false)
         .override_help(logo_str + &help_str)
-        // .subcommand(action::cmd())
-        // .subcommand(topic::cmd())
-        // .subcommand(service::cmd())
-        // .subcommand(param::cmd())
-        // .subcommand(node::cmd())
-        // .subcommand(interface::cmd())
-        // .subcommand(frame::cmd())
-        // .subcommand(run::cmd())
-        // .subcommand(launch::cmd())
-        // .subcommand(work::cmd())
-        // .subcommand(bag::cmd())
-        // .subcommand(daemon::cmd())
-        // .subcommand(middleware::cmd())
+        .subcommand(workspace::cmd())
+        .subcommand(project::cmd())
+        .subcommand(machine::cmd())
+        .subcommand(template::cmd())
+        .arg(
+            Arg::new("namespace")
+            .help("Namespace to use")
+            .short('n')
+            .long("namespace")
+            .value_name("NAMESPACE")
+            .default_value("default")
+        )
         .arg(arg!(--about "about"))
 }
