@@ -18,17 +18,29 @@ pub fn cmd() -> Command {
             .aliases(["a", "new"])
             .arg_required_else_help(true)
             .arg(
+                Arg::new("interactive")
+                .help("Interactive mode")
+                .short('i')
+                .long("interactive")
+                .conflicts_with("ip")
+                .conflicts_with("username")
+                .conflicts_with("port")
+                .conflicts_with("key")
+                .action(ArgAction::SetTrue)
+            )
+            .arg(
                 Arg::new("name")
                 .help("Name of the machine")
-                .required(true)
+                .required_unless_present("interactive")
                 .value_name("MACHINE_NAME")
             )
             .arg(
                 Arg::new("ip")
                 .help("IP addresses of the machine")
-                .required(true)
+                .required_unless_present("interactive")
                 .value_name("IP_ADDRESS")
                 .num_args(1..=10)
+                .conflicts_with("interactive")
                 .action(ArgAction::Append)
             )
             .arg(
@@ -38,6 +50,8 @@ pub fn cmd() -> Command {
                 .long("username")
                 .value_name("USERNAME")
                 .default_value("root")
+                .required_unless_present("interactive")
+                .conflicts_with("interactive")
             )
             .arg(
                 Arg::new("port")
@@ -46,6 +60,8 @@ pub fn cmd() -> Command {
                 .long("port")
                 .value_name("PORT")
                 .default_value("22")
+                .required_unless_present("interactive")
+                .conflicts_with("interactive")
             )
             .arg(
                 Arg::new("key")
@@ -54,6 +70,8 @@ pub fn cmd() -> Command {
                 .long("key")
                 .value_name("KEY_PATH")
                 .default_value("~/.ssh/id_rsa")
+                .required_unless_present("interactive")
+                .conflicts_with("interactive")
             )
         )
 }
