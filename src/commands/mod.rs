@@ -1,25 +1,24 @@
 use clap::ArgMatches;
 
+mod workspace;
+mod project;
+mod template;
+mod machine;
+
 pub fn handle(matches: ArgMatches) {
     match matches.subcommand() {
-        // Some(("action", submatch)) => {
-        //     action::handle(submatch.clone());
-        // }
-        // Some(("topic", submatch)) => {
-        //     topic::handle(submatch.clone());
-        // }
-        // Some(("service", submatch)) => {
-        //     service::handle(submatch.clone());
-        // }
-        // Some(("param", submatch)) => {
-        //     param::handle(submatch.clone());
-        // }
-        // Some(("node", submatch)) => {
-        //     node::handle(submatch.clone());
-        // }
-        // Some(("interface", submatch)) => {
-        //     interface::handle(submatch.clone());
-        // }
+        Some(("workspace", submatch)) => {
+            workspace::handle(submatch.clone());
+        }
+        Some(("project", submatch)) => {
+            project::handle(submatch.clone());
+        }
+        Some(("template", submatch)) => {
+            template::handle(submatch.clone());
+        }
+        Some(("machine", submatch)) => {
+            machine::handle(submatch.clone());
+        }
         _ => unreachable!("UNREACHABLE"),
     };
 }

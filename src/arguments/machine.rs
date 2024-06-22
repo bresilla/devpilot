@@ -1,4 +1,4 @@
-use clap::{Command, Arg, ArgAction};
+use clap::{Command, Arg};
 
 pub fn cmd() -> Command {
     Command::new("machine")
