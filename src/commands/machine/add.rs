@@ -1,5 +1,5 @@
 extern crate directories;
-use directories::{BaseDirs, UserDirs, ProjectDirs};
+use directories::{ProjectDirs};
 use clap::ArgMatches;
 use crate::commands::machine::Machine;
 
@@ -9,7 +9,6 @@ pub fn handle(matches: ArgMatches){
         proj_dirs.config_dir();
         println!("{:?}", proj_dirs.config_dir());
     }
-    
     
     let mut machine = Machine::new();
 

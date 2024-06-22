@@ -2,7 +2,6 @@ use clap::ArgMatches;
 
 mod add;
 
-
 struct Host {
     ip: String,
     port: String,
