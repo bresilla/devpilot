@@ -22,9 +22,9 @@ pub fn handle(matches: ArgMatches){
     let name = matches.get_one::<String>("name").unwrap();
     machine.set_name(name);
 
-    let host = matches.get_many::<(String, String)>("host");
+    let host = matches.get_many::<(String, String, String)>("host");
     for i in host.unwrap() {
-        machine.add_host(&i.0, &i.1);
+        machine.add_host(&i.0, &i.1, &i.2);
     }
 
     let username = matches.get_one::<String>("username").unwrap();

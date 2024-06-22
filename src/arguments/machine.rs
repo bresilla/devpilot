@@ -1,7 +1,8 @@
 use clap::{Command, Arg, ArgAction};
 use std::env;
 
-
+extern crate interfaces;
+use interfaces::Interface;
 
 pub fn cmd() -> Command {
 
@@ -35,26 +36,40 @@ pub fn cmd() -> Command {
             )
             .arg(
                 Arg::new("host")
-                .help("ip:port of the machine")
+                .help("ip:port:iface of the machine")
                 .required_unless_present("interactive")
-                .value_name("IP:PORT")
+                .value_name("IP:PORT:IFACE")
                 .num_args(1..=10)
                 .conflicts_with("interactive")
                 .action(ArgAction::Append)
                 .value_parser(|v: &str| {
+
+                    let ifs = Interface::get_all().expect("could not get interfaces");
+
                     let parts: Vec<&str> = v.split(":").collect();
-                    if parts.len() == 1 || parts.len() == 2 {
+                    if parts.len() < 3 {
                         let mut port: String = String::from("22");
+                        let mut iface: String = String::from("local");
                         if parts[0].parse::<std::net::IpAddr>().is_err() {
                             return Err(String::from("Invalid ip format"));
                         }
-                        if parts.len() == 2 {
+                        if parts.len() == 3 {
                             if parts[1].parse::<u16>().is_err() {
                                 return Err(String::from("Invalid port format"));
                             }
                             port = parts[1].to_string();
+                            //chekc if iface exists in the system
+                            if !ifs.iter().any(|i| i.name == parts[2]) {
+                                return Err(String::from("Invalid iface name"));
+                            }
+                            iface = parts[2].to_string();
+                        } else if parts.len() == 2 {
+                            if !ifs.iter().any(|i| i.name == parts[1]) {
+                                return Err(String::from("Invalid iface name"));
+                            }
+                            iface = parts[1].to_string();
                         }
-                        return Ok((parts[0].to_string(), port));
+                        return Ok((parts[0].to_string(), port, iface));
                     }
                     Err(String::from("Invalid ip:port format"))
                 })

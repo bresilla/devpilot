@@ -5,6 +5,7 @@ mod add;
 struct Host {
     ip: String,
     port: String,
+    iface: String,
 }
 struct Machine {
     name: String,
@@ -31,10 +32,11 @@ impl Machine {
         self.username = username.clone();
     }
     
-    fn add_host(&mut self, ip : &String, port: &String) {
+    fn add_host(&mut self, ip : &String, port: &String, iface: &String) {
         self.hosts.push(Host {
             ip: ip.clone(),
             port: port.clone(),
+            iface: iface.clone(),
         });
     }
     
@@ -45,7 +47,7 @@ impl Machine {
 
 impl std::fmt::Display for Host {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}:{}", self.ip, self.port)
+        write!(f, "{}:{}:{}", self.ip, self.port, self.iface)
     }
 }
 
