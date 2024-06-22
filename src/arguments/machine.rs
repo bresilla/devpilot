@@ -22,9 +22,8 @@ pub fn cmd() -> Command {
                 .help("Interactive mode")
                 .short('i')
                 .long("interactive")
-                .conflicts_with("ip")
+                .conflicts_with("host")
                 .conflicts_with("username")
-                .conflicts_with("port")
                 .conflicts_with("key")
                 .action(ArgAction::SetTrue)
             )
@@ -35,13 +34,30 @@ pub fn cmd() -> Command {
                 .value_name("MACHINE_NAME")
             )
             .arg(
-                Arg::new("ip")
-                .help("IP addresses of the machine")
+                Arg::new("host")
+                .help("ip:port of the machine")
                 .required_unless_present("interactive")
-                .value_name("IP_ADDRESS")
+                .value_name("IP:PORT")
                 .num_args(1..=10)
                 .conflicts_with("interactive")
                 .action(ArgAction::Append)
+                .value_parser(|v: &str| {
+                    let parts: Vec<&str> = v.split(":").collect();
+                    if parts.len() == 1 || parts.len() == 2 {
+                        let mut port: String = String::from("22");
+                        if parts[0].parse::<std::net::IpAddr>().is_err() {
+                            return Err(String::from("Invalid ip format"));
+                        }
+                        if parts.len() == 2 {
+                            if parts[1].parse::<u16>().is_err() {
+                                return Err(String::from("Invalid port format"));
+                            }
+                            port = parts[1].to_string();
+                        }
+                        return Ok((parts[0].to_string(), port));
+                    }
+                    Err(String::from("Invalid ip:port format"))
+                })
             )
             .arg(
                 Arg::new("username")
@@ -50,17 +66,7 @@ pub fn cmd() -> Command {
                 .long("username")
                 .value_name("USERNAME")
                 .default_value("root")
-                .required_unless_present("interactive")
-                .conflicts_with("interactive")
-            )
-            .arg(
-                Arg::new("port")
-                .help("Port to use for ssh")
-                .short('p')
-                .long("port")
-                .value_name("PORT")
-                .default_value("22")
-                .required_unless_present("interactive")
+                // .required_unless_present("interactive")
                 .conflicts_with("interactive")
             )
             .arg(
@@ -70,7 +76,7 @@ pub fn cmd() -> Command {
                 .long("key")
                 .value_name("KEY_PATH")
                 .default_value("~/.ssh/id_rsa")
-                .required_unless_present("interactive")
+                // .required_unless_present("interactive")
                 .conflicts_with("interactive")
             )
         )

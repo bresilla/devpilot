@@ -2,11 +2,15 @@ use clap::ArgMatches;
 
 mod add;
 
+
+struct Host {
+    ip: String,
+    port: String,
+}
 struct Machine {
     name: String,
-    ip: Vec<String>,
     username: String,
-    port: String,
+    hosts: Vec<Host>,
     key: String,
 }
 
@@ -14,9 +18,8 @@ impl Machine {
     fn new() -> Machine {
         Machine {
             name: String::new(),
-            ip: Vec::new(),
             username: String::new(),
-            port: String::new(),
+            hosts: Vec::new(),
             key: String::new(),
         }
     }
@@ -24,35 +27,32 @@ impl Machine {
     fn set_name(&mut self, name: &String) {
         self.name = name.clone();
     }
-    
-    fn add_ip(&mut self, ip: &String) {
-        self.ip.push(ip.clone());
-    }
-    
+
     fn set_username(&mut self, username: &String) {
         self.username = username.clone();
     }
-
-    fn set_port(&mut self, port: &String) {
-        self.port = port.clone();
+    
+    fn add_host(&mut self, ip : &String, port: &String) {
+        self.hosts.push(Host {
+            ip: ip.clone(),
+            port: port.clone(),
+        });
     }
-
+    
     fn set_key(&mut self, key: &String) {
         self.key = key.clone();
     }
 }
 
+impl std::fmt::Display for Host {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}:{}", self.ip, self.port)
+    }
+}
+
 impl std::fmt::Display for Machine {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Machine: {}\n", self.name)?;
-        write!(f, "IPs: ")?;
-        for i in &self.ip {
-            write!(f, "{} ", i)?;
-        }
-        write!(f, "\n")?;
-        write!(f, "Username: {}\n", self.username)?;
-        write!(f, "Port: {}\n", self.port)?;
-        write!(f, "Key: {}\n", self.key)
+        write!(f, "Machine: {}\nUsername: {}\nHosts: {}\nKey: {}", self.name, self.username, self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", "), self.key)
     }
 }
 

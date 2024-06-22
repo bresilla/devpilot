@@ -1,7 +1,15 @@
+extern crate directories;
+use directories::{BaseDirs, UserDirs, ProjectDirs};
 use clap::ArgMatches;
 use crate::commands::machine::Machine;
 
 pub fn handle(matches: ArgMatches){
+
+    if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "dotpilot") {
+        proj_dirs.config_dir();
+        println!("{:?}", proj_dirs.config_dir());
+    }
+    
     
     let mut machine = Machine::new();
 
@@ -15,16 +23,13 @@ pub fn handle(matches: ArgMatches){
     let name = matches.get_one::<String>("name").unwrap();
     machine.set_name(name);
 
-    let ip = matches.get_many::<String>("ip");
-    for i in ip.unwrap() {
-        machine.add_ip(i);
+    let host = matches.get_many::<(String, String)>("host");
+    for i in host.unwrap() {
+        machine.add_host(&i.0, &i.1);
     }
 
     let username = matches.get_one::<String>("username").unwrap();
     machine.set_username(username);
-
-    let port = matches.get_one::<String>("port").unwrap();
-    machine.set_port(port);
 
     let key = matches.get_one::<String>("key").unwrap();
     machine.set_key(key);
@@ -43,6 +48,7 @@ use ratatui::{
     widgets::{Block, Borders},
 };
 use std::io::{stdout, Result};
+
 
 fn interactive(machine: Machine) -> Result<()> {    
     stdout().execute(EnterAlternateScreen)?;
