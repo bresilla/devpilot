@@ -6,7 +6,9 @@ pub fn handle(matches: ArgMatches){
     let mut machine = Machine::new();
 
     if matches.get_flag("interactive") {
-        interactive();
+        if interactive(machine).is_err() {
+            eprintln!("Error: Could not start interactive mode");
+        }
         return;
     }
 
@@ -37,14 +39,12 @@ use crossterm::{
     ExecutableCommand,
 };
 use ratatui::{
-    prelude::{CrosstermBackend, Stylize, Terminal},
-    widgets::Paragraph,
+    prelude::{CrosstermBackend, Terminal, Style, Color},
+    widgets::{Block, Borders},
 };
 use std::io::{stdout, Result};
 
-fn interactive(machine: Machine) -> Result<()> {
-
-    
+fn interactive(machine: Machine) -> Result<()> {    
     stdout().execute(EnterAlternateScreen)?;
     enable_raw_mode()?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
@@ -54,10 +54,15 @@ fn interactive(machine: Machine) -> Result<()> {
         terminal.draw(|frame| {
             let area = frame.size();
             frame.render_widget(
-                Paragraph::new("Hello Ratatui! (press 'q' to quit)")
-                    .white()
-                    .on_blue(),
-                area,
+                // Paragraph::new("Hello Ratatui! (press 'q' to quit)")
+                //     .white()
+                //     .on_blue(),
+                // area,
+                Block::default().title("Machine").title_style(Style::default().fg(Color::Yellow))
+                .borders(Borders::NONE)
+                .style(Style::default().bg(Color::DarkGray)),
+                area
+
             );
         })?;
 
