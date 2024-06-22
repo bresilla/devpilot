@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.5] - 2024-06-22
+
+### <!-- 0 -->⛰️  Features
+
+- Update machine arguments and commands
+
 ## [0.1.4] - 2024-06-22
 
 ### <!-- 7 -->⚙️ Miscellaneous Tasks
