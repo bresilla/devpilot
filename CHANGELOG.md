@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4] - 2024-06-22
+
+### <!-- 7 -->⚙️ Miscellaneous Tasks
+
+- Update TOOLCHAIN_VERSION in release workflow
+
 ## [0.1.3] - 2024-06-22
 
 ### <!-- 0 -->⛰️  Features
