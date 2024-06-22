@@ -1,6 +1,12 @@
 use clap::{Command, builder::styling, arg};
 use colored::Colorize;
 
+mod workspace;
+mod project;
+mod machine;
+mod template;
+
+
 pub fn letter_str(letter: &str) -> String {
     let mut wrapped = "[".bright_green().to_string();
     wrapped.push_str(&letter.bright_green().italic().to_string());
@@ -36,7 +42,7 @@ Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().t
 Commands:".bright_blue().bold().to_string().as_str()+"
   "+ &command_str("workspace") + "   "+&letter_str("w")+ &descriptin_str("Workspace related commands") + "
   "+ &command_str("project") + "     "+&letter_str("p")+ &descriptin_str("Project and code creation") + "
-  "+ &command_str("hostname") + "    "+&letter_str("h")+ &descriptin_str("Add or edit hostnames and ssh") + "
+  "+ &command_str("machine") + "     "+&letter_str("m")+ &descriptin_str("Add or edit hostnames and ssh") + "
   "+ &command_str("template") + "    "+&letter_str("t")+ &descriptin_str("Project template management") + "
   ";
 
@@ -58,18 +64,9 @@ Commands:".bright_blue().bold().to_string().as_str()+"
         .allow_external_subcommands(false)
         .disable_help_subcommand(true)
         .override_help(logo_str + &help_str)
-        // .subcommand(action::cmd())
-        // .subcommand(topic::cmd())
-        // .subcommand(service::cmd())
-        // .subcommand(param::cmd())
-        // .subcommand(node::cmd())
-        // .subcommand(interface::cmd())
-        // .subcommand(frame::cmd())
-        // .subcommand(run::cmd())
-        // .subcommand(launch::cmd())
-        // .subcommand(work::cmd())
-        // .subcommand(bag::cmd())
-        // .subcommand(daemon::cmd())
-        // .subcommand(middleware::cmd())
+        .subcommand(workspace::cmd())
+        .subcommand(project::cmd())
+        .subcommand(machine::cmd())
+        .subcommand(template::cmd())
         .arg(arg!(--about "about"))
 }
