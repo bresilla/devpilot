@@ -1,4 +1,4 @@
-use clap::{Command, builder::styling, arg, Arg};
+use clap::{Command, builder::styling, arg};
 use colored::Colorize;
 
 mod workspace;
@@ -40,13 +40,15 @@ Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().t
       ".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" [C] ".green().to_string().as_str()+"
 
 Commands:".bright_blue().bold().to_string().as_str()+"
-  "+ &command_str("workspace") + "   "+&letter_str("w")+ &descriptin_str("Workspace related commands") + "
-  "+ &command_str("project") + "     "+&letter_str("p")+ &descriptin_str("Project and code creation") + "
-  "+ &command_str("machine") + "     "+&letter_str("m")+ &descriptin_str("Add or edit hostnames and ssh") + "
-  "+ &command_str("template") + "    "+&letter_str("t")+ &descriptin_str("Project template management") + "
+  "+ &command_str("workspace") + "  "+&letter_str("w")+ &descriptin_str("  Workspace related commands") + "
+  "+ &command_str("project") + "    "+&letter_str("p")+ &descriptin_str("  Project and code creation") + "
+  "+ &command_str("machine") + "    "+&letter_str("m")+ &descriptin_str("  Add or edit hostnames and ssh") + "
+  "+ &command_str("template") + "   "+&letter_str("t")+ &descriptin_str("  Project template management") + "
 
 Options:".bright_blue().bold().to_string().as_str()+"
-    "+ &command_str("-n, --namespace <NAMESPACE>") + "  "+&descriptin_str("Namespace to use [default: default]") + "
+    "+ &command_str("    --about") + "     "+&descriptin_str("About the tool") + "
+    "+ &command_str("-h, --help") + "      "+&descriptin_str("Prints help information") + "
+    "+ &command_str("-V, --version") + "   "+&descriptin_str("Prints version information") + "
     ";
 
     let styles = styling::Styles::styled()
@@ -60,7 +62,7 @@ Options:".bright_blue().bold().to_string().as_str()+"
         .styles(styles)
         .about(&ABOUT_STR) 
         .author("bresilla <trim.bresilla@gmail.com>")
-        .version("0.1.0")
+        .version(env!("CARGO_PKG_VERSION"))
         .long_about(ABOUT_STR)
         .subcommand_required(true)
         .arg_required_else_help(true)
@@ -71,13 +73,5 @@ Options:".bright_blue().bold().to_string().as_str()+"
         .subcommand(project::cmd())
         .subcommand(machine::cmd())
         .subcommand(template::cmd())
-        .arg(
-            Arg::new("namespace")
-            .help("Namespace to use")
-            .short('n')
-            .long("namespace")
-            .value_name("NAMESPACE")
-            .default_value("default")
-        )
         .arg(arg!(--about "about"))
 }

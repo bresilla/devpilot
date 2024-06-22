@@ -1,6 +1,12 @@
-use clap::{Command, Arg};
+use clap::{Command, Arg, ArgAction};
+use std::env;
+
+
 
 pub fn cmd() -> Command {
+
+    let _username = env::var("USER").unwrap_or_else(|_| String::from("root"));
+
     Command::new("machine")
         .about("Add or edit hostnames and ssh")
         .aliases(&["m", "machines", "host", "hosts"])
@@ -18,22 +24,36 @@ pub fn cmd() -> Command {
                 .value_name("MACHINE_NAME")
             )
             .arg(
-                Arg::new("hostname")
-                .short('h')
-                .long("hostname")
-                .aliases(&["hostname", "host"])
-                .help("Hostname of the machine")
+                Arg::new("ip")
+                .help("IP addresses of the machine")
                 .required(true)
-                .value_name("HOSTNAME")
+                .value_name("IP_ADDRESS")
+                .num_args(1..=10)
+                .action(ArgAction::Append)
             )
             .arg(
-                Arg::new("ssh")
-                .short('s')
-                .long("ssh")
-                .aliases(&["ssh", "port"])
-                .help("SSH port of the machine")
-                .required(true)
-                .value_name("SSH_PORT")
+                Arg::new("username")
+                .help("Username to use for ssh")
+                .short('u')
+                .long("username")
+                .value_name("USERNAME")
+                .default_value("root")
+            )
+            .arg(
+                Arg::new("port")
+                .help("Port to use for ssh")
+                .short('p')
+                .long("port")
+                .value_name("PORT")
+                .default_value("22")
+            )
+            .arg(
+                Arg::new("key")
+                .help("Path to the ssh key")
+                .short('k')
+                .long("key")
+                .value_name("KEY_PATH")
+                .default_value("~/.ssh/id_rsa")
             )
         )
 }

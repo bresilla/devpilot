@@ -6,6 +6,14 @@ pub fn cmd() -> Command {
         .aliases(&["p", "projects", "proj"])
         .subcommand_required(true)
         .arg_required_else_help(true)
+        .arg(
+            Arg::new("namespace")
+            .help("Namespace to use")
+            .short('n')
+            .long("namespace")
+            .value_name("NAMESPACE")
+            .default_value("default")
+        )
         .subcommand(
             Command::new("info")
             .about("Print information about a project")
