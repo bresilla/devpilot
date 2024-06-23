@@ -1,7 +1,7 @@
 use clap::ArgMatches;
 
 mod add;
-
+mod list;
 struct Host {
     ip: String,
     port: String,
@@ -61,6 +61,9 @@ pub fn handle(matches: ArgMatches){
     match matches.subcommand() {
         Some(("add", args)) => {
             add::handle(args.clone());
+        }
+        Some(("list", args)) => {
+            list::handle(args.clone());
         }
         _ => unreachable!("UNREACHABLE"),
     }

@@ -95,4 +95,17 @@ pub fn cmd() -> Command {
                 .conflicts_with("interactive")
             )
         )
+        .subcommand(
+            Command::new("list")
+            .about("List all machines")
+            .aliases(["l", "ls"])
+            // .arg_required_else_help(true)
+            .arg(
+                Arg::new("interactive")
+                .help("Interactive mode")
+                .short('i')
+                .long("interactive")
+                .action(ArgAction::SetTrue)
+            )
+        )
 }

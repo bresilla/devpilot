@@ -27,13 +27,14 @@ const ABOUT_STR: &str = "ultimate tool for managing development workflows";
 
 pub fn cli(logo: bool) -> Command {
     let _logo_1: String ="
-       ██         ".bright_blue().to_string().to_owned()+"
-       ██         ".bright_blue().to_string().as_str()+"
-   ██████ ██████  ".bright_blue().to_string().as_str()+"
-  ██   ██ ██   ██ ".bright_blue().to_string().as_str()+"
-   ██████ ██████  ".bright_blue().to_string().as_str()+"
-          ██      ".bright_blue().to_string().as_str()+"
-          ██      ".bright_blue().to_string().as_str()+ "\n";
+             ██               ".bright_blue().to_string().to_owned()+"
+     ██      ██         ██    ".bright_blue().to_string().as_str()+"
+   ██    ██████ ██████    ██  ".bright_blue().to_string().as_str()+"
+ ██     ██   ██ ██   ██     ██".bright_blue().to_string().as_str()+"
+   ██    ██████ ██████    ██  ".bright_blue().to_string().as_str()+"
+     ██         ██      ██    ".bright_blue().to_string().as_str()+"
+                ██            ".bright_blue().to_string().as_str()+ "\n";
+
     let logo_str: String = if logo {_logo_1 } else { String::new() };
     let help_str: String = " ".to_string().to_owned()+"
 Usage:".bright_blue().bold().to_string().as_str()+"  dp".bright_green().bold().to_string().as_str()+" <COMMAND> ".green().to_string().as_str()+"
