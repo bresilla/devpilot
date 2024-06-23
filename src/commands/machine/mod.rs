@@ -3,12 +3,14 @@ use serde::Deserialize;
 
 mod add;
 mod list;
+
 #[derive(Debug, Deserialize)]
 struct Host {
     ip: String,
     port: String,
     iface: String,
 }
+
 #[derive(Debug, Deserialize)]
 struct Machine {
     name: String,
@@ -21,6 +23,7 @@ struct Machine {
 struct Machines {
     machines: Vec<Machine>,
 }
+
 
 impl Machine {
     fn new() -> Machine {
@@ -62,6 +65,20 @@ impl std::fmt::Display for Host {
 impl std::fmt::Display for Machine {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "Machine: {}\nUsername: {}\nHosts: {}\nKey: {}", self.name, self.username, self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", "), self.key)
+    }
+}
+
+impl Machines {
+    fn new() -> Machines {
+        Machines {
+            machines: Vec::new(),
+        }
+    }
+}
+
+impl std::fmt::Display for Machines {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.machines.iter().map(|m| m.to_string()).collect::<Vec<String>>().join("\n"))
     }
 }
 

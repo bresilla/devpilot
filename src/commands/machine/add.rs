@@ -1,37 +1,39 @@
 extern crate directories;
 use directories::ProjectDirs;
-use clap::{ArgMatches, Error};
-use crate::commands::machine::{Machines, Machine, Host};
-use std::io::{stdout, Result};
+use clap::ArgMatches;
+use crate::commands::machine::Machine ;
+use std::io::Result;
+use serde::Deserialize;
+use figment::{providers::{Format, Toml}, Figment};
+use std::fs;
 
-use config::{Config, ConfigError, File};
 
+#[derive(Debug, Deserialize)]
+struct Machines {
+    machines: Vec<Machine>,
+}
 
 pub fn handle(matches: ArgMatches){
-
-    let settings: Config;
-
+    let settings: Machines;
     if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "devpilot") {
-
-        //if folder does not exist, create it
         if !proj_dirs.config_dir().exists() {
             std::fs::create_dir_all(proj_dirs.config_dir()).expect("Could not create config directory");
         }
 
-        let config_file = proj_dirs.config_dir().join("machines.toml");
-        //if file does not exist, create it
-        if !config_file.exists() {
-            std::fs::write(&config_file, "").expect("Could not create config file");
-        }
+        let toml_content = fs::read_to_string(proj_dirs.config_dir().join("machines.toml")).expect("Could not read config file");
+        settings = toml::from_str(&toml_content).expect("Failed to parse TOML file");
 
-        settings = Config::builder()
-            .add_source(File::from(config_file))
-            .build().expect("Could not build config");
+        println!("{:?}", settings);
 
+        // let config_file = proj_dirs.config_dir().join("machines.toml");
+        // if !config_file.exists() {
+        //     std::fs::write(&config_file, "").expect("Could not create config file");
+        // }
+        // let settings: Machines = Figment::new()
+        //     .merge(Toml::file(config_file).nested())
+        //     .extract().unwrap();
         // let machines: Machines = settings.try_into().expect("Could not parse config");
     }
-
-    
 
     
     let mut machine = Machine::new();
@@ -61,7 +63,7 @@ pub fn handle(matches: ArgMatches){
 
 }
 
-use inquire::{Text, validator::{StringValidator, Validation}};
+use inquire::{Text, validator::Validation};
 
 fn interactive(machine: &mut Machine) -> Result<()> {
 
