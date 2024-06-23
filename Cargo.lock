@@ -346,6 +346,7 @@ dependencies = [
  "inquire",
  "interfaces",
  "ratatui",
+ "serde",
 ]
 
 [[package]]

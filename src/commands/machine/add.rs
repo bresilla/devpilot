@@ -1,15 +1,38 @@
 extern crate directories;
 use directories::ProjectDirs;
-use clap::ArgMatches;
-use crate::commands::machine::Machine;
+use clap::{ArgMatches, Error};
+use crate::commands::machine::{Machines, Machine, Host};
 use std::io::{stdout, Result};
+
+use config::{Config, ConfigError, File};
 
 
 pub fn handle(matches: ArgMatches){
 
-    if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "dotpilot") {
-        proj_dirs.config_dir();
+    let settings: Config;
+
+    if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "devpilot") {
+
+        //if folder does not exist, create it
+        if !proj_dirs.config_dir().exists() {
+            std::fs::create_dir_all(proj_dirs.config_dir()).expect("Could not create config directory");
+        }
+
+        let config_file = proj_dirs.config_dir().join("machines.toml");
+        //if file does not exist, create it
+        if !config_file.exists() {
+            std::fs::write(&config_file, "").expect("Could not create config file");
+        }
+
+        settings = Config::builder()
+            .add_source(File::from(config_file))
+            .build().expect("Could not build config");
+
+        // let machines: Machines = settings.try_into().expect("Could not parse config");
     }
+
+    
+
     
     let mut machine = Machine::new();
     
@@ -50,6 +73,7 @@ fn interactive(machine: &mut Machine) -> Result<()> {
                 Ok(Validation::Valid)
             }
         })
+        // .with_default("Super_cool")
         .prompt();
 
     if name.is_ok() {

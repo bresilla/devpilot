@@ -1,0 +1,24 @@
+[[machine]]
+name = "machine1"
+username = "user1"
+key = "key1"
+
+[[machine.hosts]]
+ip = "192.168.1.1"
+port = "8080"
+iface = "eth0"
+
+[[machine.hosts]]
+ip = "192.168.1.2"
+port = "8081"
+iface = "eth1"
+
+[[machine]]
+name = "machine2"
+username = "user2"
+key = "key2"
+
+[[machine.hosts]]
+ip = "192.168.2.1"
+port = "8080"
+iface = "eth0"

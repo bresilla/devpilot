@@ -1,17 +1,25 @@
 use clap::ArgMatches;
+use serde::Deserialize;
 
 mod add;
 mod list;
+#[derive(Debug, Deserialize)]
 struct Host {
     ip: String,
     port: String,
     iface: String,
 }
+#[derive(Debug, Deserialize)]
 struct Machine {
     name: String,
     username: String,
     hosts: Vec<Host>,
     key: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct Machines {
+    machines: Vec<Machine>,
 }
 
 impl Machine {
