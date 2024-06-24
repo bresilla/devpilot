@@ -4,22 +4,15 @@ use clap::ArgMatches;
 use crate::commands::machine::{Host, Machine, Machines};
 use std::io::Result;
 use figment::{providers::{Format, Toml}, Figment};
+use inquire::{Text, validator::Validation};
 use toml;
-// use toml_edit;
 use std::env;
 use hostname;
+extern crate interfaces;
+use interfaces::Interface;
 
-
-// #[derive(Debug, Deserialize, Serialize)]
-// struct Machines {
-//     machines: Vec<Machine>,
-// }
 
 pub fn handle(matches: ArgMatches){
-    // let mut machines = Machines::new();
-
-    
-
     if let Some(proj_dirs)  = BaseDirs::new() {
         if !proj_dirs.data_local_dir().exists() {
             std::fs::create_dir_all(proj_dirs.data_local_dir()).expect("Could not create config directory");
@@ -86,10 +79,8 @@ pub fn handle(matches: ArgMatches){
 
 }
 
-use inquire::{Text, validator::Validation};
 
 fn interactive(machine: &mut Machine) -> Result<()> {
-
     let name = Text::new("Name")
         .with_validator(|input: &str| {
             if input.is_empty() {
@@ -98,7 +89,6 @@ fn interactive(machine: &mut Machine) -> Result<()> {
                 Ok(Validation::Valid)
             }
         })
-        // .with_default("Super_cool")
         .prompt();
 
     if name.is_ok() {
@@ -121,9 +111,42 @@ fn interactive(machine: &mut Machine) -> Result<()> {
         machine.set_username(&username.unwrap());
     }
 
-    let host = "192.168.0.1:22:eth0";
-    machine.add_host(&host.split(":").collect::<Vec<&str>>()[0].to_string(), &host.split(":").collect::<Vec<&str>>()[1].to_string(), &host.split(":").collect::<Vec<&str>>()[2].to_string());
-    
+   
+    // let host = "192.168.0.1:22:eth0";
+    // machine.add_host(&host.split(":").collect::<Vec<&str>>()[0].to_string(), &host.split(":").collect::<Vec<&str>>()[1].to_string(), &host.split(":").collect::<Vec<&str>>()[2].to_string());
+
+    let host = Text::new("Host")
+        .with_validator(|input: &str| {
+            let ifs = Interface::get_all().expect("could not get interfaces");
+            let parts: Vec<&str> = input.split(":").collect();
+            if parts.len() < 3 {
+                return Ok(Validation::Invalid("Invalid host format, should be ip:port:iface".into()));
+            }
+            if parts[0].parse::<std::net::IpAddr>().is_err() {
+                return Ok(Validation::Invalid("Invalid ip format".into()));
+            }
+            if parts.len() == 3 {
+                if parts[1].parse::<u16>().is_err() {
+                    return Ok(Validation::Invalid("Invalid port format".into()));
+                }
+                if !ifs.iter().any(|i| i.name == parts[2]) {
+                    return Ok(Validation::Invalid("Invalid iface name".into()));
+                }
+            } else if parts.len() == 2 {
+                if !ifs.iter().any(|i| i.name == parts[1]) {
+                    return Ok(Validation::Invalid("Invalid iface name".into()));
+                }
+            }
+            Ok(Validation::Valid)
+        })
+        .prompt();
+
+    if host.is_ok() {
+        let host = host.unwrap();
+        machine.add_host(&host.split(":").collect::<Vec<&str>>()[0].to_string(), &host.split(":").collect::<Vec<&str>>()[1].to_string(), &host.split(":").collect::<Vec<&str>>()[2].to_string());
+    }
+
+
 
     
     println!("{}", machine);
