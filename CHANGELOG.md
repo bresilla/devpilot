@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.1.6] - 2024-06-24
+
+### <!-- 0 -->⛰️  Features
+
+- Refactor machine management logic
+- Handle serialization and deserialization of machines.toml
+- Update dependencies and refactor machine handling
+- Add `serde` dependency and refactor machine-related code
+- Add 'inquire' dependency and 'list' subcommand
+- Update machine commands to support interfaces
+- Refactor machine-related code and add config related crates
+- Refactor interactive mode interface and error handling
+- Refactor interactive UI functionality with ratatui
+
+### <!-- 2 -->🚜 Refactor
+
+- Refactor code structure and remove unused imports and commented code
+
+### <!-- 7 -->⚙️ Miscellaneous Tasks
+
+- Refactor code and optimize imports in machine commands
+
 ## [0.1.5] - 2024-06-22
 
 ### <!-- 0 -->⛰️  Features
