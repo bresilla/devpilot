@@ -15,8 +15,8 @@ struct Host {
 struct Machine {
     name: String,
     username: String,
-    hosts: Vec<Host>,
     key: Option<String>,
+    hosts: Vec<Host>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -30,8 +30,8 @@ impl Machine {
         Machine {
             name: String::new(),
             username: String::new(),
-            hosts: Vec::new(),
             key: None,
+            hosts: Vec::new(),
         }
     }
 
@@ -68,13 +68,13 @@ impl std::fmt::Display for Machine {
     }
 }
 
-impl Machines {
-    fn new() -> Machines {
-        Machines {
-            machines: Vec::new(),
-        }
-    }
-}
+// impl Machines {
+//     fn new() -> Machines {
+//         Machines {
+//             machines: Vec::new(),
+//         }
+//     }
+// }
 
 impl std::fmt::Display for Machines {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
