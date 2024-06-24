@@ -1,37 +1,52 @@
 extern crate directories;
-use directories::ProjectDirs;
+use directories::BaseDirs;
 use clap::ArgMatches;
-use crate::commands::machine::Machine ;
+use crate::commands::machine::{Host, Machine, Machines};
 use std::io::Result;
-use serde::Deserialize;
-use figment::{providers::{Format, Toml}, Figment};
-use std::fs;
+use figment::{providers::{Format, Toml, Env}, Figment};
+use toml;
+use std::env;
+use hostname;
 
 
-#[derive(Debug, Deserialize)]
-struct Machines {
-    machines: Vec<Machine>,
-}
+// #[derive(Debug, Deserialize, Serialize)]
+// struct Machines {
+//     machines: Vec<Machine>,
+// }
 
 pub fn handle(matches: ArgMatches){
-    let settings: Machines;
-    if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "devpilot") {
-        if !proj_dirs.config_dir().exists() {
-            std::fs::create_dir_all(proj_dirs.config_dir()).expect("Could not create config directory");
+    if let Some(proj_dirs)  = BaseDirs::new() {
+        if !proj_dirs.data_local_dir().exists() {
+            std::fs::create_dir_all(proj_dirs.data_local_dir()).expect("Could not create config directory");
         }
 
-        let toml_content = fs::read_to_string(proj_dirs.config_dir().join("machines.toml")).expect("Could not read config file");
-        settings = toml::from_str(&toml_content).expect("Failed to parse TOML file");
+        let machines_file = proj_dirs.data_local_dir().join("machines.toml");
+        if !machines_file.exists() || machines_file.metadata().unwrap().len() == 0 {
+            std::fs::write(&machines_file, "").expect("Could not create config file");
+            let hostn = hostname::get().unwrap().into_string().unwrap();
+            let usrn = env::var("USER").unwrap_or_else(|_| String::from("root"));
+            let machines = Machines {
+                machines: vec![
+                    Machine {
+                        name: String::from(hostn.to_owned() + ".local"),
+                        username: String::from(usrn),
+                        hosts: vec![Host {
+                            ip: String::from("127.0.0.1"),
+                            port: String::from("22"),
+                            iface: String::from("local"),
+                            }],
+                        key: None,
+                        }
+                    ]
+                };
 
-        println!("{:?}", settings);
 
-        // let config_file = proj_dirs.config_dir().join("machines.toml");
-        // if !config_file.exists() {
-        //     std::fs::write(&config_file, "").expect("Could not create config file");
-        // }
-        // let settings: Machines = Figment::new()
-        //     .merge(Toml::file(config_file).nested())
-        //     .extract().unwrap();
+            let toml = toml::to_string(&machines).unwrap();
+            std::fs::write(&machines_file, toml).expect("Could not write to config file");
+        }
+        let machines: Machines = Figment::new()
+            .merge(Toml::file(machines_file))
+            .extract().unwrap();
         // let machines: Machines = settings.try_into().expect("Could not parse config");
     }
 

@@ -1,25 +1,25 @@
 use clap::ArgMatches;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 mod add;
 mod list;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct Host {
     ip: String,
     port: String,
     iface: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct Machine {
     name: String,
     username: String,
     hosts: Vec<Host>,
-    key: String,
+    key: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct Machines {
     machines: Vec<Machine>,
 }
@@ -31,7 +31,7 @@ impl Machine {
             name: String::new(),
             username: String::new(),
             hosts: Vec::new(),
-            key: String::new(),
+            key: None,
         }
     }
 
@@ -52,7 +52,7 @@ impl Machine {
     }
     
     fn set_key(&mut self, key: &String) {
-        self.key = key.clone();
+        self.key = Some(key.clone());
     }
 }
 
@@ -64,7 +64,7 @@ impl std::fmt::Display for Host {
 
 impl std::fmt::Display for Machine {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Machine: {}\nUsername: {}\nHosts: {}\nKey: {}", self.name, self.username, self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", "), self.key)
+        write!(f, "Machine: {}\nUsername: {}\nHosts: {}\nKey: {}", self.name, self.username, self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", "), self.key.as_ref().unwrap_or(&String::from("None")))
     }
 }
 
