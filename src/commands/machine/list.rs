@@ -42,9 +42,9 @@ fn interactive(_machines: &mut Machines) -> Result<()> {
         terminal.draw(|frame| {
             let area = frame.size();
             frame.render_widget(
-                Block::default().title("Machine").title_style(Style::default().fg(Color::Yellow))
+                Block::default().title("Machines").title_style(Style::default().fg(Color::Black).bg(Color::Yellow))
                 .borders(Borders::NONE)
-                .style(Style::default().bg(Color::DarkGray)),
+                .style(Style::default().bg(Color::Black)),
                 area
 
             );
