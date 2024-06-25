@@ -1,5 +1,9 @@
 use clap::ArgMatches;
 use serde::{Deserialize, Serialize};
+use std::env;
+use hostname;
+use directories::BaseDirs;
+use std::path::PathBuf;
 
 mod add;
 mod list;
@@ -83,12 +87,47 @@ impl std::fmt::Display for Machines {
 }
 
 pub fn handle(matches: ArgMatches){
+
+    let mut machines_file: PathBuf = PathBuf::new();
+    if let Some(proj_dirs)  = BaseDirs::new() {
+        if !proj_dirs.data_local_dir().exists() {
+            std::fs::create_dir_all(proj_dirs.data_local_dir()).expect("Could not create config directory");
+        }
+        machines_file = proj_dirs.data_local_dir().join("machines.toml");
+        if !machines_file.exists() || machines_file.metadata().unwrap().len() == 0 {
+            std::fs::write(&machines_file, "").expect("Could not create config file");
+            let hostn = hostname::get().unwrap().into_string().unwrap();
+            let usrn = env::var("USER").unwrap_or_else(|_| String::from("root"));
+            let machines = Machines {
+                machines: vec![
+                    Machine {
+                        name: String::from(hostn.to_owned() + ".local"),
+                        username: String::from(usrn),
+                        hosts: vec![Host {
+                            ip: String::from("127.0.0.1"),
+                            port: String::from("22"),
+                            iface: String::from("local"),
+                            }],
+                        key: None,
+                        }
+                    ]
+                };
+            let toml = toml::to_string(&machines).unwrap();
+            std::fs::write(&machines_file, toml).expect("Could not write to config file");
+        }
+    }
+
+    if machines_file == PathBuf::new() {
+        eprintln!("Error: Could not create config file");
+        return;
+    }
+
     match matches.subcommand() {
         Some(("add", args)) => {
-            add::handle(args.clone());
+            add::handle(args.clone(), machines_file);
         }
         Some(("list", args)) => {
-            list::handle(args.clone());
+            list::handle(args.clone(), machines_file);
         }
         _ => unreachable!("UNREACHABLE"),
     }
