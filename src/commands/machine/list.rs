@@ -1,7 +1,8 @@
 extern crate directories;
 use directories::ProjectDirs;
 use clap::ArgMatches;
-use crate::commands::machine::Machine;
+use crate::commands::machine::Machines;
+use figment::{providers::{Format, Toml}, Figment};
 use std::io::{stdout, Result};
 use crossterm::{
     event::{self, KeyCode, KeyEventKind},
@@ -20,9 +21,11 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf){
     if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "dotpilot") {
         proj_dirs.config_dir();
     }
-    let mut machine = Machine::new();
+    let mut machines: Machines = Figment::new()
+        .merge(Toml::file(&machines_file))
+        .extract().unwrap();
     if matches.get_flag("interactive") {
-        if interactive(&mut machine).is_err() {
+        if interactive(&mut machines).is_err() {
             eprintln!("Error: Could not start interactive mode");
         }
         return;
@@ -30,12 +33,11 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf){
 }
 
 
-fn interactive(machine: &mut Machine) -> Result<()> {    
+fn interactive(_machines: &mut Machines) -> Result<()> {    
     stdout().execute(EnterAlternateScreen)?;
     enable_raw_mode()?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
-    machine.set_name(&String::from("test"));
     loop{
         terminal.draw(|frame| {
             let area = frame.size();
