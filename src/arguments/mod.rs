@@ -46,6 +46,11 @@ Commands:".bright_blue().bold().to_string().as_str()+"
   "+ &command_str("machine") + "    "+&letter_str("m")+ &descriptin_str("  Add or edit hostnames and ssh") + "
   "+ &command_str("template") + "   "+&letter_str("t")+ &descriptin_str("  Project template management") + "
 
+Mode:".bright_blue().bold().to_string().as_str()+"
+  "+ &command_str("  -t, --tui") + "     "+&descriptin_str("  Terminal User Interface") + "
+  "+ &command_str("  -g, --gui") + "     "+&descriptin_str("  Graphical User Interface") + "
+  "+ &command_str("  -c, --cli") + "     "+&descriptin_str("  Command Line Interface [default]") + "
+
 Options:".bright_blue().bold().to_string().as_str()+"
     "+ &command_str("    --about") + "     "+&descriptin_str("About the tool") + "
     "+ &command_str("-h, --help") + "      "+&descriptin_str("Prints help information") + "

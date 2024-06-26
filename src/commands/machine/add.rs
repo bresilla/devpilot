@@ -1,6 +1,6 @@
 extern crate directories;
 use clap::ArgMatches;
-use crate::commands::machine::{Machine, Machines};
+use crate::commands::{machine::{Machine, Machines}, TerminalSize};
 use std::io::Result;
 use figment::{providers::{Format, Toml}, Figment};
 use inquire::{Text, validator::Validation};
@@ -10,44 +10,46 @@ extern crate interfaces;
 use interfaces::Interface;
 use std::path::PathBuf;
 
-
-pub fn handle(matches: ArgMatches, machines_file: PathBuf){
+pub fn handle(matches: ArgMatches, machines_file: PathBuf, _terminal_size: TerminalSize){
     let mut machines: Machines = Figment::new()
         .merge(Toml::file(&machines_file))
         .extract().unwrap();
         
-    let mut machine = Machine::new();
+    let mut new_machine = Machine::new();
     if matches.get_flag("interactive") {
-        if interactive(&mut machine).is_err() {
+        if interactive(&mut new_machine).is_err() {
             eprintln!("Error: Could not start interactive mode");
         }
     } else {
         let name = matches.get_one::<String>("name").unwrap();
-        machine.set_name(name);
+        new_machine.set_name(name);
         
         let host = matches.get_many::<(String, String, String)>("host");
         for i in host.unwrap() {
-            machine.add_host(&i.0, &i.1, &i.2);
+            new_machine.add_host(&i.0, &i.1, &i.2);
         }
         
         let username = matches.get_one::<String>("username").unwrap();
-        machine.set_username(username);
+        new_machine.set_username(username);
         
         let key = matches.get_one::<String>("key").unwrap();
-        machine.set_key(key);
+        new_machine.set_key(key);
     }
 
-    //check if machine already exists
-    if machines.machines.iter().any(|m| m.name == machine.name) {
-        eprintln!("Error: Machine with name {} already exists", machine.name);
-        return;
+    if let Some(m) = machines.machines.iter_mut().find(|m| m.name == new_machine.name) {
+        for h in new_machine.hosts.iter() {
+            if m.hosts.iter().find(|host| host.iface == h.iface).is_some() {
+                eprintln!("Error: Machine with name {} and interface {} already exists", m.name, h.iface);
+                return;
+            }
+        }
+        m.hosts.append(&mut new_machine.hosts);
+    } else {
+        machines.machines.push(new_machine);
     }
     
-    machines.machines.push(machine);
     let toml = toml::to_string_pretty(&machines).unwrap();
-    std::fs::write(&machines_file, toml).expect("Could not write to config file");        
-
-
+    std::fs::write(&machines_file, toml).expect("Could not write to config file");
 }
 
 

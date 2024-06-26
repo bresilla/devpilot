@@ -4,6 +4,16 @@ use std::env;
 use hostname;
 use directories::BaseDirs;
 use std::path::PathBuf;
+use std::iter;
+use std::borrow::Cow;
+use tabled::{
+    settings::{
+        object::{Columns, Object, Rows},
+        style::Style, 
+        themes::ColumnNames, Alignment, Color, Disable, Height, Width},
+    Table, Tabled
+};
+use crate::commands::TerminalSize;
 
 mod add;
 mod list;
@@ -15,17 +25,39 @@ struct Host {
     iface: String,
 }
 
+impl std::fmt::Display for Host {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}:{}:{}", self.ip, self.port, self.iface)
+    }
+}
+
+impl Clone for Host {
+    fn clone(&self) -> Self {
+        Host {
+            ip: self.ip.clone(),
+            port: self.port.clone(),
+            iface: self.iface.clone(),
+        }
+    }
+}
+
+impl Tabled for Host {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["IP".into(), "Port".into(), "Interface".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> { 
+        vec![self.ip.clone().into(), self.port.clone().into(), self.iface.clone().into()]
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 struct Machine {
     name: String,
     username: String,
     key: Option<String>,
     hosts: Vec<Host>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct Machines {
-    machines: Vec<Machine>,
 }
 
 
@@ -60,9 +92,14 @@ impl Machine {
     }
 }
 
-impl std::fmt::Display for Host {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}:{}:{}", self.ip, self.port, self.iface)
+impl Clone for Machine {
+    fn clone(&self) -> Self {
+        Machine {
+            name: self.name.clone(),
+            username: self.username.clone(),
+            key: self.key.clone(),
+            hosts: self.hosts.clone(),
+        }
     }
 }
 
@@ -72,13 +109,76 @@ impl std::fmt::Display for Machine {
     }
 }
 
-// impl Machines {
-//     fn new() -> Machines {
-//         Machines {
-//             machines: Vec::new(),
-//         }
-//     }
-// }
+impl Tabled for Machine {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["Name".into(), "Username".into(), "Hosts".into(), "Key".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> {
+        let mut hosts_table = Table::new(self.hosts.clone());
+        hosts_table.with(Style::modern()).with(Disable::row(Rows::first()));
+        vec![
+            self.name.clone().into(), 
+            self.username.clone().into(), 
+            hosts_table.to_string().into(), 
+            self.key.as_ref().unwrap_or(&String::from("None")).clone().into()]
+    }
+}
+
+
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Machines {
+    machines: Vec<Machine>,
+}
+
+impl Machines {
+    fn _new() -> Machines {
+        Machines {
+            machines: Vec::new(),
+        }
+    }
+
+    fn to_table(&self, ts: TerminalSize) -> String {
+        let mut table = Table::new(self.clone());
+        table.with(Width::wrap(ts.0)).with(Height::limit(ts.1))
+            .with(Style::modern());
+        // table.with(Style::modern()).with(
+        //     ColumnNames::default()
+        //         .color(Color::BOLD | Color::BG_BLUE | Color::FG_WHITE)
+        //         .alignment(Alignment::center()),
+        // );
+        table.to_string()
+    }
+
+    fn to_listed(&self) -> String {
+        let mut new_str: String = String::new();
+        for machine in self.machines.iter() {
+            for host in machine.hosts.iter() {
+                // new_vec.push(format!("{}:{}:{}:{}:{}\n", machine.name, machine.username, host.ip, host.port, host.iface));
+                new_str.push_str(&format!("{}\t{}\t{}\t{}\t{}\n", machine.name, machine.username, host.ip, host.port, host.iface));
+            }
+        }
+        new_str
+    }
+}
+
+impl iter::IntoIterator for Machines {
+    type Item = Machine;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.machines.into_iter()
+    }
+}
+
+impl Clone for Machines {
+    fn clone(&self) -> Self {
+        Machines {
+            machines: self.machines.clone(),
+        }
+    }
+}
 
 impl std::fmt::Display for Machines {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -86,7 +186,21 @@ impl std::fmt::Display for Machines {
     }
 }
 
-pub fn handle(matches: ArgMatches){
+impl Tabled for Machines {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["Name".into(), "Username".into(), "Hosts".into(), "Key".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> { 
+        vec![self.machines.iter().map(|m| m.name.clone()).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.username.clone()).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", ")).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.key.as_ref().unwrap_or(&String::from("None")).clone()).collect::<Vec<String>>().join(", ").into()]
+    }
+}
+
+pub fn handle(matches: ArgMatches, terminal_size: TerminalSize){
 
     let mut machines_file: PathBuf = PathBuf::new();
     if let Some(proj_dirs)  = BaseDirs::new() {
@@ -101,7 +215,7 @@ pub fn handle(matches: ArgMatches){
             let machines = Machines {
                 machines: vec![
                     Machine {
-                        name: String::from(hostn.to_owned() + ".local"),
+                        name: String::from(hostn.to_owned()),
                         username: String::from(usrn),
                         hosts: vec![Host {
                             ip: String::from("127.0.0.1"),
@@ -124,10 +238,10 @@ pub fn handle(matches: ArgMatches){
 
     match matches.subcommand() {
         Some(("add", args)) => {
-            add::handle(args.clone(), machines_file);
+            add::handle(args.clone(), machines_file, terminal_size);
         }
         Some(("list", args)) => {
-            list::handle(args.clone(), machines_file);
+            list::handle(args.clone(), machines_file, terminal_size);
         }
         _ => unreachable!("UNREACHABLE"),
     }
