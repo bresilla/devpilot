@@ -13,9 +13,6 @@ use ratatui::{
 };
 use std::path::PathBuf;
 
-use tabled::{settings::Width,settings::Height,Table};
-
-
 pub fn handle(matches: ArgMatches, machines_file: PathBuf, terminal_size: TerminalSize){
     if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "dotpilot") {
         proj_dirs.config_dir();
@@ -23,7 +20,7 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf, terminal_size: Termin
     let mut machines: Machines = Figment::new()
         .merge(Toml::file(&machines_file))
         .extract().unwrap();
-    
+
     if matches.get_flag("interactive") {
         if interactive(&mut machines).is_err() {
             eprintln!("Error: Could not start interactive mode");

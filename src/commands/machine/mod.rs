@@ -1,4 +1,3 @@
-use clap::builder::Str;
 use clap::ArgMatches;
 use serde::{Deserialize, Serialize};
 use tabled::Tabled;
