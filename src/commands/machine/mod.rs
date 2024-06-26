@@ -1,3 +1,4 @@
+use clap::builder::Str;
 use clap::ArgMatches;
 use serde::{Deserialize, Serialize};
 use tabled::Tabled;
@@ -7,8 +8,7 @@ use directories::BaseDirs;
 use std::path::PathBuf;
 use std::iter;
 use std::borrow::Cow;
-use tabled::Table;
-
+use tabled::{settings::Width,settings::Height,Table};
 use crate::commands::TerminalSize;
 
 mod add;
@@ -133,6 +133,12 @@ impl Machines {
         Machines {
             machines: Vec::new(),
         }
+    }
+
+    fn to_table(&self, ts: TerminalSize) -> String {
+        let mut table = Table::new(self.clone());
+        table.with(Width::wrap(ts.0)).with(Height::limit(ts.1));
+        table.to_string()
     }
 }
 

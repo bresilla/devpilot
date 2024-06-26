@@ -23,15 +23,13 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf, terminal_size: Termin
     let mut machines: Machines = Figment::new()
         .merge(Toml::file(&machines_file))
         .extract().unwrap();
+    
     if matches.get_flag("interactive") {
         if interactive(&mut machines).is_err() {
             eprintln!("Error: Could not start interactive mode");
         }
     } else {
-        let mut table = Table::new(machines);
-        table.with(Width::wrap(terminal_size.0)).with(Height::limit(terminal_size.1));
-        //     .with(Width::wrap(terminal_size.0));
-        println!("{}", table.to_string());
+        println!("{}", machines.to_table(terminal_size));
     }
 }
 
