@@ -1,6 +1,6 @@
 extern crate directories;
 use clap::ArgMatches;
-use crate::commands::machine::{Machine, Machines};
+use crate::commands::{machine::{Machine, Machines}, TerminalSize};
 use std::io::Result;
 use figment::{providers::{Format, Toml}, Figment};
 use inquire::{Text, validator::Validation};
@@ -10,7 +10,7 @@ extern crate interfaces;
 use interfaces::Interface;
 use std::path::PathBuf;
 
-pub fn handle(matches: ArgMatches, machines_file: PathBuf){
+pub fn handle(matches: ArgMatches, machines_file: PathBuf, _terminal_size: TerminalSize){
     let mut machines: Machines = Figment::new()
         .merge(Toml::file(&machines_file))
         .extract().unwrap();

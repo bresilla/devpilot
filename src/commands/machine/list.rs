@@ -1,25 +1,22 @@
+use crate::commands::{machine::Machines, TerminalSize};
 extern crate directories;
 use directories::ProjectDirs;
 use clap::ArgMatches;
-use crate::commands::machine::Machines;
 use figment::{providers::{Format, Toml}, Figment};
 use std::io::{stdout, Result};
 use crossterm::{
-    event::{self, KeyCode, KeyEventKind},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
+    event::{self, KeyCode, KeyEventKind}, terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen}, ExecutableCommand
 };
 use ratatui::{
     prelude::{CrosstermBackend, Terminal, Style, Color},
     widgets::{Block, Borders},
 };
 use std::path::PathBuf;
-use tabled::Table;
+
+use tabled::{settings::Width,settings::Height,Table};
 
 
-
-
-pub fn handle(matches: ArgMatches, machines_file: PathBuf){
+pub fn handle(matches: ArgMatches, machines_file: PathBuf, terminal_size: TerminalSize){
     if let Some(proj_dirs) = ProjectDirs::from("com", "bresilla", "dotpilot") {
         proj_dirs.config_dir();
     }
@@ -31,8 +28,10 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf){
             eprintln!("Error: Could not start interactive mode");
         }
     } else {
-        let table = Table::new(machines).to_string();
-        println!("{}", table);
+        let mut table = Table::new(machines);
+        table.with(Width::wrap(terminal_size.0)).with(Height::limit(terminal_size.1));
+        //     .with(Width::wrap(terminal_size.0));
+        println!("{}", table.to_string());
     }
 }
 

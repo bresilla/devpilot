@@ -8,6 +8,8 @@ use std::path::PathBuf;
 use std::iter;
 use std::borrow::Cow;
 
+use crate::commands::TerminalSize;
+
 mod add;
 mod list;
 
@@ -171,7 +173,7 @@ impl Tabled for Machines {
     }
 }
 
-pub fn handle(matches: ArgMatches){
+pub fn handle(matches: ArgMatches, terminal_size: TerminalSize){
 
     let mut machines_file: PathBuf = PathBuf::new();
     if let Some(proj_dirs)  = BaseDirs::new() {
@@ -209,10 +211,10 @@ pub fn handle(matches: ArgMatches){
 
     match matches.subcommand() {
         Some(("add", args)) => {
-            add::handle(args.clone(), machines_file);
+            add::handle(args.clone(), machines_file, terminal_size);
         }
         Some(("list", args)) => {
-            list::handle(args.clone(), machines_file);
+            list::handle(args.clone(), machines_file, terminal_size);
         }
         _ => unreachable!("UNREACHABLE"),
     }
