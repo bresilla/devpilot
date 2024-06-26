@@ -25,6 +25,8 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf, terminal_size: Termin
         if interactive(&mut machines).is_err() {
             eprintln!("Error: Could not start interactive mode");
         }
+    } else if matches.get_flag("raw") {
+        println!("{}", machines.to_listed());
     } else {
         println!("{}", machines.to_table(terminal_size));
     }

@@ -1,13 +1,18 @@
 use clap::ArgMatches;
 use serde::{Deserialize, Serialize};
-use tabled::Tabled;
 use std::env;
 use hostname;
 use directories::BaseDirs;
 use std::path::PathBuf;
 use std::iter;
 use std::borrow::Cow;
-use tabled::{settings::Width,settings::Height,Table};
+use tabled::{
+    settings::{
+        object::{Columns, Object, Rows},
+        style::Style, 
+        themes::ColumnNames, Alignment, Color, Disable, Height, Width},
+    Table, Tabled
+};
 use crate::commands::TerminalSize;
 
 mod add;
@@ -111,7 +116,8 @@ impl Tabled for Machine {
     }
 
     fn fields(&self) -> Vec<Cow<'_, str>> {
-        let hosts_table = Table::new(self.hosts.clone());
+        let mut hosts_table = Table::new(self.hosts.clone());
+        hosts_table.with(Style::modern()).with(Disable::row(Rows::first()));
         vec![
             self.name.clone().into(), 
             self.username.clone().into(), 
@@ -136,8 +142,25 @@ impl Machines {
 
     fn to_table(&self, ts: TerminalSize) -> String {
         let mut table = Table::new(self.clone());
-        table.with(Width::wrap(ts.0)).with(Height::limit(ts.1));
+        table.with(Width::wrap(ts.0)).with(Height::limit(ts.1))
+            .with(Style::modern());
+        // table.with(Style::modern()).with(
+        //     ColumnNames::default()
+        //         .color(Color::BOLD | Color::BG_BLUE | Color::FG_WHITE)
+        //         .alignment(Alignment::center()),
+        // );
         table.to_string()
+    }
+
+    fn to_listed(&self) -> String {
+        let mut new_str: String = String::new();
+        for machine in self.machines.iter() {
+            for host in machine.hosts.iter() {
+                // new_vec.push(format!("{}:{}:{}:{}:{}\n", machine.name, machine.username, host.ip, host.port, host.iface));
+                new_str.push_str(&format!("{}\t{}\t{}\t{}\t{}\n", machine.name, machine.username, host.ip, host.port, host.iface));
+            }
+        }
+        new_str
     }
 }
 

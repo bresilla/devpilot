@@ -107,5 +107,13 @@ pub fn cmd() -> Command {
                 .long("interactive")
                 .action(ArgAction::SetTrue)
             )
+            .arg(
+                Arg::new("raw")
+                .help("Raw mode")
+                .short('r')
+                .long("raw")
+                .conflicts_with("interactive")
+                .action(ArgAction::SetTrue)
+            )
         )
 }

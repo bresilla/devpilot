@@ -49,9 +49,7 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf, _terminal_size: Termi
     }
     
     let toml = toml::to_string_pretty(&machines).unwrap();
-    std::fs::write(&machines_file, toml).expect("Could not write to config file");        
-
-
+    std::fs::write(&machines_file, toml).expect("Could not write to config file");
 }
 
 
