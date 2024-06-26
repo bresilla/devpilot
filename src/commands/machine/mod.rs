@@ -7,6 +7,7 @@ use directories::BaseDirs;
 use std::path::PathBuf;
 use std::iter;
 use std::borrow::Cow;
+use tabled::Table;
 
 use crate::commands::TerminalSize;
 
@@ -110,8 +111,13 @@ impl Tabled for Machine {
         vec!["Name".into(), "Username".into(), "Hosts".into(), "Key".into()]
     }
 
-    fn fields(&self) -> Vec<Cow<'_, str>> { 
-        vec![self.name.clone().into(), self.username.clone().into(), self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", ").into(), self.key.as_ref().unwrap_or(&String::from("None")).clone().into()]
+    fn fields(&self) -> Vec<Cow<'_, str>> {
+        let hosts_table = Table::new(self.hosts.clone());
+        vec![
+            self.name.clone().into(), 
+            self.username.clone().into(), 
+            hosts_table.to_string().into(), 
+            self.key.as_ref().unwrap_or(&String::from("None")).clone().into()]
     }
 }
 
@@ -129,13 +135,6 @@ impl Machines {
         }
     }
 }
-
-// impl iter::Iterator for Machines {
-//     type Item = Machine;
-//     fn next(&mut self) -> Option<Self::Item> {
-//         self.machines.pop()
-//     }
-// }
 
 impl iter::IntoIterator for Machines {
     type Item = Machine;
