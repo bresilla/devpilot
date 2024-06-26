@@ -40,14 +40,14 @@ fn interactive(_machines: &mut Machines) -> Result<()> {
     terminal.clear()?;
     loop{
         terminal.draw(|frame| {
-            let area = frame.size();
-            frame.render_widget(
-                Block::default().title("Machines").title_style(Style::default().fg(Color::Black).bg(Color::Yellow))
-                .borders(Borders::NONE)
-                .style(Style::default().bg(Color::Black)),
-                area
+                let area = frame.size();
+                frame.render_widget(
+                    Block::default().title("Machines").title_style(Style::default().fg(Color::Black).bg(Color::Yellow))
+                    .borders(Borders::NONE)
+                    .style(Style::default().bg(Color::Black)),
+                    area
 
-            );
+                );
         })?;
         if event::poll(std::time::Duration::from_millis(16))? {
             if let event::Event::Key(key) = event::read()? {

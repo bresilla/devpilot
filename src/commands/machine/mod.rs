@@ -4,6 +4,7 @@ use std::env;
 use hostname;
 use directories::BaseDirs;
 use std::path::PathBuf;
+use std::iter;
 
 mod add;
 mod list;
@@ -15,17 +16,28 @@ struct Host {
     iface: String,
 }
 
+impl std::fmt::Display for Host {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}:{}:{}", self.ip, self.port, self.iface)
+    }
+}
+
+impl Clone for Host {
+    fn clone(&self) -> Self {
+        Host {
+            ip: self.ip.clone(),
+            port: self.port.clone(),
+            iface: self.iface.clone(),
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 struct Machine {
     name: String,
     username: String,
     key: Option<String>,
     hosts: Vec<Host>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct Machines {
-    machines: Vec<Machine>,
 }
 
 
@@ -60,9 +72,14 @@ impl Machine {
     }
 }
 
-impl std::fmt::Display for Host {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}:{}:{}", self.ip, self.port, self.iface)
+impl Clone for Machine {
+    fn clone(&self) -> Self {
+        Machine {
+            name: self.name.clone(),
+            username: self.username.clone(),
+            key: self.key.clone(),
+            hosts: self.hosts.clone(),
+        }
     }
 }
 
@@ -72,6 +89,13 @@ impl std::fmt::Display for Machine {
     }
 }
 
+
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Machines {
+    machines: Vec<Machine>,
+}
+
 // impl Machines {
 //     fn new() -> Machines {
 //         Machines {
@@ -79,6 +103,21 @@ impl std::fmt::Display for Machine {
 //         }
 //     }
 // }
+
+impl iter::Iterator for Machines {
+    type Item = Machine;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.machines.pop()
+    }
+}
+
+impl Clone for Machines {
+    fn clone(&self) -> Self {
+        Machines {
+            machines: self.machines.clone(),
+        }
+    }
+}
 
 impl std::fmt::Display for Machines {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
