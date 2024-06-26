@@ -1,10 +1,12 @@
 use clap::ArgMatches;
 use serde::{Deserialize, Serialize};
+use tabled::Tabled;
 use std::env;
 use hostname;
 use directories::BaseDirs;
 use std::path::PathBuf;
 use std::iter;
+use std::borrow::Cow;
 
 mod add;
 mod list;
@@ -29,6 +31,17 @@ impl Clone for Host {
             port: self.port.clone(),
             iface: self.iface.clone(),
         }
+    }
+}
+
+impl Tabled for Host {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["IP".into(), "Port".into(), "Interface".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> { 
+        vec![self.ip.clone().into(), self.port.clone().into(), self.iface.clone().into()]
     }
 }
 
@@ -89,6 +102,17 @@ impl std::fmt::Display for Machine {
     }
 }
 
+impl Tabled for Machine {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["Name".into(), "Username".into(), "Hosts".into(), "Key".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> { 
+        vec![self.name.clone().into(), self.username.clone().into(), self.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", ").into(), self.key.as_ref().unwrap_or(&String::from("None")).clone().into()]
+    }
+}
+
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -96,18 +120,26 @@ struct Machines {
     machines: Vec<Machine>,
 }
 
-// impl Machines {
-//     fn new() -> Machines {
-//         Machines {
-//             machines: Vec::new(),
-//         }
+impl Machines {
+    fn _new() -> Machines {
+        Machines {
+            machines: Vec::new(),
+        }
+    }
+}
+
+// impl iter::Iterator for Machines {
+//     type Item = Machine;
+//     fn next(&mut self) -> Option<Self::Item> {
+//         self.machines.pop()
 //     }
 // }
 
-impl iter::Iterator for Machines {
+impl iter::IntoIterator for Machines {
     type Item = Machine;
-    fn next(&mut self) -> Option<Self::Item> {
-        self.machines.pop()
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.machines.into_iter()
     }
 }
 
@@ -122,6 +154,20 @@ impl Clone for Machines {
 impl std::fmt::Display for Machines {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.machines.iter().map(|m| m.to_string()).collect::<Vec<String>>().join("\n"))
+    }
+}
+
+impl Tabled for Machines {
+    const LENGTH: usize = 42;
+    fn headers() -> Vec<Cow<'static, str>> {
+        vec!["Name".into(), "Username".into(), "Hosts".into(), "Key".into()]
+    }
+
+    fn fields(&self) -> Vec<Cow<'_, str>> { 
+        vec![self.machines.iter().map(|m| m.name.clone()).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.username.clone()).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.hosts.iter().map(|h| h.to_string()).collect::<Vec<String>>().join(", ")).collect::<Vec<String>>().join(", ").into(), 
+        self.machines.iter().map(|m| m.key.as_ref().unwrap_or(&String::from("None")).clone()).collect::<Vec<String>>().join(", ").into()]
     }
 }
 
@@ -140,7 +186,7 @@ pub fn handle(matches: ArgMatches){
             let machines = Machines {
                 machines: vec![
                     Machine {
-                        name: String::from(hostn.to_owned() + ".local"),
+                        name: String::from(hostn.to_owned()),
                         username: String::from(usrn),
                         hosts: vec![Host {
                             ip: String::from("127.0.0.1"),

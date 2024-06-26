@@ -10,7 +10,6 @@ extern crate interfaces;
 use interfaces::Interface;
 use std::path::PathBuf;
 
-
 pub fn handle(matches: ArgMatches, machines_file: PathBuf){
     let mut machines: Machines = Figment::new()
         .merge(Toml::file(&machines_file))

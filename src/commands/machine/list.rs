@@ -14,6 +14,8 @@ use ratatui::{
     widgets::{Block, Borders},
 };
 use std::path::PathBuf;
+use tabled::Table;
+
 
 
 
@@ -28,7 +30,9 @@ pub fn handle(matches: ArgMatches, machines_file: PathBuf){
         if interactive(&mut machines).is_err() {
             eprintln!("Error: Could not start interactive mode");
         }
-        return;
+    } else {
+        let table = Table::new(machines).to_string();
+        println!("{}", table);
     }
 }
 
